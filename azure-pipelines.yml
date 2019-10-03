@@ -43,6 +43,29 @@ steps:
     projects: '**/*.csproj'
 
 - task: DotNetCoreCLI@2
+  displayName: 'installing reportgenerator'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'install --global dotnet-reportgenerator-globaltool --version 4.1.1'
+  
+- task: DotNetCoreCLI@2
+  displayName: 'Generating code coverage xml'
+  inputs:
+    command: test
+    arguments: 'MSYS2_ARG_CONV_EXCL="*" dotnet test --no-build \
+     MSYS2_ARG_CONV_EXCL="*" dotnet test --no-build \
+     --configuration $(buildConfiguration) \
+     /p:CollectCoverage=true \
+     /p:CoverletOutputFormat=cobertura \
+     /p:CoverletOutput=./TestResults/Coverage/'
+    publishTestResults: true
+    projects: '**/*.Tests.csproj'
+
+- script: '$HOME/.dotnet/tools/reportgenerator -reports:./Tailspin.SpaceGame.Web.Tests/TestResults/Coverage/coverage.cobertura.xml -targetdir:./CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
+  displayName: 'generating code coverage html'
+
+- task: DotNetCoreCLI@2
   displayName: 'Running unit tests'
   inputs:
     command: 'test'
