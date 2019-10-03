@@ -54,7 +54,6 @@ steps:
   inputs:
     command: test
     arguments: 'MSYS2_ARG_CONV_EXCL="*" dotnet test --no-build \
-     MSYS2_ARG_CONV_EXCL="*" dotnet test --no-build \
      --configuration $(buildConfiguration) \
      /p:CollectCoverage=true \
      /p:CoverletOutputFormat=cobertura \
