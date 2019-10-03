@@ -57,8 +57,9 @@ steps:
     publishTestResults: true
     projects: '**/*.Tests.csproj'
 
-- script: '$HOME/.dotnet/tools/reportgenerator -reports:./Tailspin.SpaceGame.Web.Tests/TestResults/Coverage/coverage.cobertura.xml -targetdir:./CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
-  displayName: 'generating code coverage html'
+- script: |
+    reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+  displayName: 'Create code coverage report'
 
 - task: DotNetCoreCLI@2
   displayName: 'Running unit tests'
